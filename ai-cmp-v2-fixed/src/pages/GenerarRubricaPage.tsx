@@ -1,3 +1,4 @@
+```tsx
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -53,7 +54,7 @@ Incluye al menos 4 criterios de evaluación con descriptores claros para cada ni
   }
 
   async function exportPDF() {
-    const criteriosHTML = rubrica?.criterios?.map((c: any, idx: number) => `
+    const criteriosHTML = rubrica?.criterios?.map((c: any) => `
       <tr>
         <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">${c.nombre}</td>
         <td style="border: 1px solid #ddd; padding: 8px; background: #d4edda;">${c.destacado}</td>
@@ -191,3 +192,4 @@ Incluye al menos 4 criterios de evaluación con descriptores claros para cada ni
     </div>
   )
 }
+```
