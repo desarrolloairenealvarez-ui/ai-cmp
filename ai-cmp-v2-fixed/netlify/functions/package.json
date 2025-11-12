@@ -1,0 +1,17 @@
+{
+  "name": "ai-cmp-v2-netlify-functions",
+  "version": "2.0.0",
+  "description": "Netlify Functions para AI-CMP v2.0 - Asistente Pedagógico Colegio Madre Paulina",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@supabase/supabase-js": "^2.81.0",
+    "@turbodocx/html-to-docx": "^0.1.0",
+    "chrome-aws-lambda": "^10.1.0",
+    "docx": "^9.5.1",
+    "puppeteer": "^23.10.1",
+    "puppeteer-core": "^10.1.0",
+    "uuid": "^11.0.3"
+  }
+}
