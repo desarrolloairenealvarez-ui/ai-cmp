@@ -1,4 +1,3 @@
-```typescript
 import { useState } from 'react'
 
 interface UseAIAssistantOptions {
@@ -53,4 +52,3 @@ export function useAIAssistant(options: UseAIAssistantOptions = {}) {
 
   return { callAI, loading, error }
 }
-```
