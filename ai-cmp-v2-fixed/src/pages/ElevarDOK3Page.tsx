@@ -1,3 +1,4 @@
+```tsx
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -6,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrendingUp, ArrowLeft } from 'lucide-react'
-import html2pdf from 'html2pdf.js'
 
 export function ElevarDOK3Page({ onBack }: { onBack: () => void }) {
   const { user } = useAuth()
@@ -114,3 +114,4 @@ Responde en JSON: {"reactivo_dok3": "...", "justificacion": "...", "nivel_origin
     </div>
   )
 }
+```
