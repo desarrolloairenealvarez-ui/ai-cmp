@@ -1,212 +1,184 @@
-```tsx
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Clock, Download, FileText, Brain, Users, Target, FileOutput, MessageSquare } from 'lucide-react'
+import { History, ArrowLeft, Calendar, FileText, Clock } from 'lucide-react'
 
-interface WorkHistoryItem {
+interface WorkHistoryEntry {
   id: string
+  tipo_actividad: string
+  titulo: string
+  descripcion: string
+  fecha_creacion: string
   module_name: string
-  work_data: any
-  created_at: string
 }
 
-const moduleIcons: { [key: string]: React.ElementType } = {
-  'ChatIA': MessageSquare,
-  'AnalizarReactivo': Brain,
-  'ElevarDOK3': Target,
-  'GenerarRubrica': FileText,
-  'AnalizarPrueba': Users,
-  'PreguntasOA': Target,
-  'Retroalimentacion': MessageSquare,
-  'GenerarEvaluacion': FileOutput,
-  'Planificacion': FileText
-}
-
-const moduleNames: { [key: string]: string } = {
-  'ChatIA': 'Chat IA',
-  'AnalizarReactivo': 'Análisis de Reactivos',
-  'ElevarDOK3': 'Elevar a DOK 3',
-  'GenerarRubrica': 'Generar Rúbricas',
-  'AnalizarPrueba': 'Análisis de Prueba',
-  'PreguntasOA': 'Preguntas por Objetivo',
-  'Retroalimentacion': 'Retroalimentación',
-  'GenerarEvaluacion': 'Generar Evaluación',
-  'Planificacion': 'Planificación'
-}
-
-export function UserHistory() {
+export function UserHistory({ onBack }: { onBack: () => void }) {
   const { user } = useAuth()
-  const [history, setHistory] = useState<WorkHistoryItem[]>([])
+  const [history, setHistory] = useState<WorkHistoryEntry[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (user) {
-      loadHistory()
+      fetchHistory()
     }
   }, [user])
 
-  async function loadHistory() {
+  const fetchHistory = async () => {
+    if (!user) return
+
     try {
       setLoading(true)
       const { data, error } = await supabase
         .from('user_work_history')
         .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
-        .limit(50)
+        .eq('user_id', user.id)
+        .order('fecha_creacion', { ascending: false })
 
-      if (error) {
-        console.error('Error cargando historial:', error)
-        return
-      }
-
+      if (error) throw error
       setHistory(data || [])
     } catch (error) {
-      console.error('Error cargando historial:', error)
+      console.error('Error fetching history:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  async function exportHistory() {
-    if (history.length === 0) return
+  const getModuleIcon = (moduleName: string) => {
+    const icons: Record<string, string> = {
+      'generar_rubrica': '📝',
+      'elevar_dok3': '📈',
+      'crear_actividades': '🎯',
+      'default': '📄'
+    }
+    return icons[moduleName] || icons['default']
+  }
 
-    const element = document.createElement('div')
-    const historialHtml = history.map((item, index) => {
-      const moduleName = moduleNames[item.module_name] || item.module_name
-      const fecha = new Date(item.created_at).toLocaleDateString('es-CL', {
+  const getModuleColor = (moduleName: string) => {
+    const colors: Record<string, string> = {
+      'generar_rubrica': 'bg-orange-100 text-orange-800',
+      'elevar_dok3': 'bg-green-100 text-green-800',
+      'crear_actividades': 'bg-blue-100 text-blue-800',
+      'default': 'bg-gray-100 text-gray-800'
+    }
+    return colors[moduleName] || colors['default']
+  }
+
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('es-ES', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
       })
-
-      return `
-        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
-          <h3 style="color: #2c6b8c; margin-bottom: 5px;">${index + 1}. ${moduleName}</h3>
-          <p style="color: #666; font-size: 12px; margin-bottom: 10px;">Fecha: ${fecha}</p>
-          <div style="background: #f9f9f9; padding: 10px; border-radius: 3px;">
-            <pre style="margin: 0; white-space: pre-wrap;">${JSON.stringify(item.work_data, null, 2)}</pre>
-          </div>
-        </div>
-      `
-    }).join('')
-
-    element.innerHTML = `
-      <div style="font-family: Arial, sans-serif; padding: 40px;">
-        <h1 style="color: #2b5774; border-bottom: 2px solid #4a95bf; padding-bottom: 10px;">
-          Historial de Trabajo - ${moduleNames[user?.user_metadata?.module] || 'Usuario'}
-        </h1>
-        <p style="color: #666;">Generado: ${new Date().toLocaleString('es-CL')}</p>
-        <hr style="border: 1px solid #4a95bf; margin: 20px 0;" />
-        <h2 style="color: #2c6b8c;">Total de actividades: ${history.length}</h2>
-        ${historialHtml}
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
-          <p>Generado con IA - Plataforma Docente Colegio Madre Paulina</p>
-        </div>
-      </div>
-    `
-
-    const html2pdf = require('html2pdf.js')
-    html2pdf().from(element).save(`historial-trabajo-${Date.now()}.pdf`)
+    } catch {
+      return 'Fecha inválida'
+    }
   }
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cmp-azul-medio mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-600">Cargando historial...</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cmp-verde-oscuro mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando historial...</p>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-cmp-azul-medio" />
-              Historial de Trabajo
-            </CardTitle>
-            <CardDescription>
-              Registro de todas tus actividades en el asistente pedagógico
-            </CardDescription>
-          </div>
-          {history.length > 0 && (
-            <Button onClick={exportHistory} variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Exportar PDF
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <header className="bg-white border-b shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={onBack}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver
             </Button>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        {history.length === 0 ? (
-          <div className="text-center py-8">
-            <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">Aún no tienes actividades registradas</p>
-            <p className="text-sm text-gray-400">
-              Comienza a usar los módulos del asistente para ver tu historial aquí
-            </p>
+            <h1 className="text-2xl font-bold text-cmp-verde-oscuro flex items-center gap-2">
+              <History className="w-6 h-6" />
+              Mi Historial
+            </h1>
           </div>
+          <Button onClick={fetchHistory} variant="outline" size="sm">
+            <Clock className="w-4 h-4 mr-2" />
+            Actualizar
+          </Button>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        {history.length === 0 ? (
+          <Card>
+            <CardContent className="text-center py-16">
+              <History className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No hay actividad aún
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Comienza a crear contenido para ver tu historial aquí.
+              </p>
+              <Button onClick={onBack} className="bg-cmp-verde-oscuro hover:bg-cmp-verde-claro">
+                Ir a Herramientas
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <span>Total de actividades: {history.length}</span>
-              <span>Última actualización: {new Date().toLocaleDateString('es-CL')}</span>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Actividad Reciente ({history.length} actividades)
+              </h2>
             </div>
             
-            <div className="max-h-96 overflow-y-auto space-y-3">
-              {history.map((item) => {
-                const Icon = moduleIcons[item.module_name] || FileText
-                const moduleName = moduleNames[item.module_name] || item.module_name
-                const fecha = new Date(item.created_at).toLocaleDateString('es-CL', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })
-
-                return (
-                  <div
-                    key={item.id}
-                    className="flex items-start gap-3 p-3 bg-gray-50 rounded border hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="p-2 bg-cmp-azul-soft rounded-lg">
-                      <Icon className="w-4 h-4 text-cmp-azul-medio" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium text-sm truncate">{moduleName}</h4>
-                        <Badge variant="secondary" className="text-xs">
-                          {item.work_data?.status || 'completado'}
-                        </Badge>
+            {history.map((entry, idx) => (
+              <Card key={entry.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 bg-cmp-verde-oscuro rounded-lg flex items-center justify-center text-white text-lg">
+                        {getModuleIcon(entry.module_name)}
                       </div>
-                      <p className="text-xs text-gray-600 mb-1">{fecha}</p>
-                      {item.work_data?.tipo && (
-                        <p className="text-xs text-gray-500">
-                          Tipo: {item.work_data.tipo}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900 truncate">
+                          {entry.titulo || 'Sin título'}
+                        </h3>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getModuleColor(entry.module_name)}`}>
+                          {entry.module_name}
+                        </span>
+                      </div>
+                      
+                      {entry.descripcion && (
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                          {entry.descripcion}
                         </p>
                       )}
+                      
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(entry.fecha_creacion)}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <FileText className="w-3 h-3" />
+                          {entry.tipo_actividad}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </main>
+    </div>
   )
 }
-```
