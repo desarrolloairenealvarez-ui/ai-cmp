@@ -1,17 +1,10 @@
+```typescript
 import { useState } from 'react'
 
 interface UseAIAssistantOptions {
   endpoint?: string
   systemPrompt?: string
   temperature?: number
-}
-
-interface AIResponse {
-  response: string
-  usage?: {
-    promptTokens: number
-    completionTokens: number
-  }
 }
 
 export function useAIAssistant(options: UseAIAssistantOptions = {}) {
@@ -60,3 +53,4 @@ export function useAIAssistant(options: UseAIAssistantOptions = {}) {
 
   return { callAI, loading, error }
 }
+```
