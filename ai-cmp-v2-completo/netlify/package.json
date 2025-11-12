@@ -1,0 +1,16 @@
+{
+  "name": "madre-paulina-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for Plataforma Docente IA Madre Paulina",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Building functions...'",
+    "zip": "cd netlify && zip -r functions.zip functions/"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
