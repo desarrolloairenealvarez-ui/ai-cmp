@@ -1,3 +1,4 @@
+```tsx
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -76,7 +77,6 @@ export function UserHistory() {
 
     const element = document.createElement('div')
     const historialHtml = history.map((item, index) => {
-      const Icon = moduleIcons[item.module_name] || FileText
       const moduleName = moduleNames[item.module_name] || item.module_name
       const fecha = new Date(item.created_at).toLocaleDateString('es-CL', {
         year: 'numeric',
@@ -209,3 +209,4 @@ export function UserHistory() {
     </Card>
   )
 }
+```
