@@ -1,4 +1,3 @@
-```tsx
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -17,9 +16,7 @@ export function GenerarRubricaPage({ onBack }: { onBack: () => void }) {
   const [nivel, setNivel] = useState('')
   const [rubrica, setRubrica] = useState<any>(null)
   const { callAI, loading, error } = useAIAssistant({
-    systemPrompt: `Eres un experto en diseño de rúbricas de evaluación. 
-Genera rúbricas analíticas con 4 niveles: Destacado, Competente, En Desarrollo, Inicial.
-Responde en JSON: {"criterios": [{"nombre": "...", "destacado": "...", "competente": "...", "en_desarrollo": "...", "inicial": "..."}], "puntaje_total": 100}`,
+    systemPrompt: 'Eres un experto en diseño de rúbricas de evaluación. Genera rúbricas analíticas con 4 niveles: Destacado, Competente, En Desarrollo, Inicial. Responde en JSON: {"criterios": [{"nombre": "...", "destacado": "...", "competente": "...", "en_desarrollo": "...", "inicial": "..."}], "puntaje_total": 100}',
     temperature: 0.6,
   })
 
@@ -192,4 +189,3 @@ Incluye al menos 4 criterios de evaluación con descriptores claros para cada ni
     </div>
   )
 }
-```
