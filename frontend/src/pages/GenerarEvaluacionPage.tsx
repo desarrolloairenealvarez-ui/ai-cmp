@@ -8,7 +8,7 @@ export default function GenerarEvaluacionPage() {
   const [prompt, setPrompt] = useState('')
   const [resultado, setResultado] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [jobId, setJobId] = useState<string | null>(null)
+  const [_jobId, setJobId] = useState<string | null>(null)
   const [isPolling, setIsPolling] = useState(false)
 
   const handleGenerar = async () => {
