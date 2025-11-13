@@ -70,7 +70,7 @@ export default function PlanificadorPage() {
         throw new Error('Usuario no autenticado')
       }
 
-      const { data, error } = await supabase
+     const { data: _, error } = await supabase
         .from('planificaciones')
         .insert({
           user_id: user.id,
