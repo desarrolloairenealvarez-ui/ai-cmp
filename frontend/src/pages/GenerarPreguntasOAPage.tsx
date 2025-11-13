@@ -82,7 +82,7 @@ export default function GenerarPreguntasOAPage() {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download: `preguntas-oa.${format}`
+      a.download= `preguntas-oa.${format}`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
