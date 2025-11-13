@@ -1,12 +1,31 @@
+# --- Configuración de Build ---
+# Esto le dice a Netlify cómo construir tu sitio
 [build]
-  # Directorio donde están las funciones serverless
-  functions = "netlify/functions"
-  # Comando de build a ejecutar
-  command = "cd frontend && npm install && npm run build"
-  # Directorio de salida
-  publish = "frontend/dist"
 
-# Regla de Redirect para que React Router maneje el enrutamiento
+  # 1. Directorio Base:
+  # Le dice a Netlify que "entre" a esta carpeta antes de hacer nada.
+  base = "frontend"
+
+  # 2. Comando de Build:
+  # El comando que se debe ejecutar DENTRO de la carpeta "frontend".
+  # (Si tu agente usó pnpm, cambia esto a "pnpm run build")
+  command = "npm run build"
+
+  # 3. Directorio de Publicación:
+  # La carpeta que Vite/React crea con el sitio final.
+  # (Esto es relativo a la carpeta "base" que definiste arriba)
+  publish = "dist"
+
+  # 4. Directorio de Funciones:
+  # Dónde están tus funciones de backend.
+  # (Esto es relativo a la RAÍZ del repositorio)
+  functions = "netlify/functions"
+
+
+# --- Regla de Redirección (¡ESTO ARREGLA EL 404!) ---
+# Le dice a Netlify que para cualquier ruta que no encuentre (/*),
+# debe simplemente cargar el index.html y dejar que React Router
+# se encargue de mostrar la página correcta.
 [[redirects]]
   from = "/*"
   to = "/index.html"
