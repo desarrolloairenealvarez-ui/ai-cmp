@@ -1,5 +1,9 @@
-puppeteer-core
-chrome-aws-lambda
-@turbodocx/html-to-docx
-@google/generative-ai
-@supabase/supabase-js
+{
+  "name": "netlify-functions",
+  "private": true,
+  "dependencies": {
+    "@google/generative-ai": "^0.2.1",
+    "@turbodocx/html-to-docx": "^1.1.0",
+    "puppeteer-core": "^22.0.0"
+  }
+}
