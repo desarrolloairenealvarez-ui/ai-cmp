@@ -11,3 +11,7 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Plugin para instalar automáticamente las dependencias de las functions
+[[plugins]]
+package = "@netlify/plugin-functions-install-core"
