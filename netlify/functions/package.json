@@ -1,0 +1,6 @@
+# Dependencias para functions serverless
+puppeteer-core
+chrome-aws-lambda
+@turbodocx/html-to-docx
+@google/generative-ai
+@supabase/supabase-js

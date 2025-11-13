@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Madre Paulina - Plataforma Educativa IA</title>
+    <meta name="description" content="Plataforma educativa de Colegio Madre Paulina impulsada por IA para profesores" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+      .container {
+        text-align: center;
+        max-width: 600px;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+      .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+      .loading {
+        font-size: 1rem;
+        opacity: 0.8;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+      .features {
+        margin-top: 2rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .feature {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎓 Madre Paulina</h1>
+      <p class="subtitle">Plataforma Educativa con Inteligencia Artificial</p>
+      <div class="loading">La aplicación está cargando...</div>
+      
+      <div class="features">
+        <div class="feature">📋 Planificador de Secuencias Didácticas</div>
+        <div class="feature">🔍 Análisis de Taxonomía de Bloom</div>
+        <div class="feature">📊 Análisis de Balance Curricular</div>
+        <div class="feature">📝 Generador de Rúbricas</div>
+        <div class="feature">❓ Generador de Preguntas por OA</div>
+        <div class="feature">📄 Exportación PDF/DOCX</div>
+      </div>
+    </div>
+    
+    <script>
+      // Simular carga de la aplicación
+      setTimeout(() => {
+        document.querySelector('.loading').innerHTML = 
+          '✅ Aplicación lista para configurar variables de entorno';
+      }, 3000);
+      
+      // Verificar si la app se cargó correctamente
+      window.addEventListener('load', () => {
+        console.log('✅ Madre Paulina app cargada correctamente');
+      });
+    </script>
+  </body>
+</html>
