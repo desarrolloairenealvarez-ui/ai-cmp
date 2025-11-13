@@ -1,8 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Button } from '@/components/ui/button'
-import { 
-  FiHome, 
+import {  
   FiTarget, 
   FiFileText, 
   FiBarChart, 
